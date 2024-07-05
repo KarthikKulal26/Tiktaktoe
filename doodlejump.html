@@ -7,6 +7,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -38,17 +39,38 @@
             height: 15px;
             background-color: #8B4513;
         }
+        .controls {
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .score {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="score" id="score">Score: 0</div>
     <div class="game-container" id="gameContainer">
         <div class="doodler" id="doodler"></div>
+    </div>
+    <div class="controls">
+        <button class="button" id="leftButton">Left</button>
+        <button class="button" id="rightButton">Right</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const gameContainer = document.getElementById('gameContainer');
             const doodler = document.getElementById('doodler');
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+            const scoreDisplay = document.getElementById('score');
             let doodlerLeftSpace = 50;
             let startPoint = 150;
             let doodlerBottomSpace = startPoint;
@@ -62,6 +84,7 @@
             let isGoingRight = false;
             let leftTimerId;
             let rightTimerId;
+            let score = 0;
 
             class Platform {
                 constructor(newPlatformBottom) {
@@ -99,6 +122,8 @@
                             platforms.shift();
                             let newPlatform = new Platform(600);
                             platforms.push(newPlatform);
+                            score++;
+                            scoreDisplay.innerText = `Score: ${score}`;
                         }
                     });
                 }
@@ -150,6 +175,7 @@
                     gameContainer.removeChild(gameContainer.firstChild);
                 }
                 gameContainer.innerHTML = 'Game Over';
+                scoreDisplay.innerText = `Final Score: ${score}`;
             }
 
             function control(e) {
@@ -196,6 +222,11 @@
                 clearInterval(leftTimerId);
                 clearInterval(rightTimerId);
             }
+
+            leftButton.addEventListener('touchstart', moveLeft);
+            leftButton.addEventListener('touchend', moveStraight);
+            rightButton.addEventListener('touchstart', moveRight);
+            rightButton.addEventListener('touchend', moveStraight);
 
             function start() {
                 if (!isGameOver) {
