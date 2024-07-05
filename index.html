@@ -7,6 +7,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -34,6 +35,24 @@
             margin-top: 20px;
             font-size: 18px;
         }
+        .marquee {
+            margin-top: 20px;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+        .marquee p {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+            font-size: 20px;
+            color: #000;
+        }
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
     </style>
 </head>
 <body>
@@ -50,6 +69,9 @@
             <div class="cell" data-index="8"></div>
         </div>
         <div class="message" id="message"></div>
+    </div>
+    <div class="marquee">
+        <p>Mr Karthik welcomes you to a game of Tictaktoe!</p>
     </div>
 
     <script>
@@ -136,7 +158,6 @@
 
         cells.forEach(cell => cell.addEventListener('click', handleCellClick));
         document.addEventListener('DOMContentLoaded', handleRestartGame);
-    </script> 
-   <br> <h1> Mr Karthik invites you for a game of Tic Tak Toe </h1><br>
+    </script>
 </body>
 </html>
