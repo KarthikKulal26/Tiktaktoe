@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            gap: 0;
+            border: 2px solid black; /* Border around the entire board */
+        }
+
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            color: black;
+            cursor: pointer;
+            border: 1px solid black; /* Border between cells */
+        }
+
+        .row:nth-child(even) .cell:nth-child(even),
+        .row:nth-child(odd) .cell:nth-child(odd) {
+            background-color: #f0d9b5; /* Light square */
+        }
+
+        .row:nth-child(even) .cell:nth-child(odd),
+        .row:nth-child(odd) .cell:nth-child(even) {
+            background-color: #b58863; /* Dark square */
+        }
+
+        .selected {
+            background-color: #f8ff8e !important; /* Highlight selected piece */
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="chessBoard">
+        <!-- Row 1 -->
+        <div class="cell" data-piece="♜">♜</div>
+        <div class="cell" data-piece="♞">♞</div>
+        <div class="cell" data-piece="♝">♝</div>
+        <div class="cell" data-piece="♛">♛</div>
+        <div class="cell" data-piece="♚">♚</div>
+        <div class="cell" data-piece="♝">♝</div>
+        <div class="cell" data-piece="♞">♞</div>
+        <div class="cell" data-piece="♜">♜</div>
+
+        <!-- Row 2 -->
+        <div class="cell" data-piece="♟">♟</div>
+        <div class="cell" data-piece="♟">♟</div>
+        <div class="cell" data-piece="♟">♟</div>
+        <div class="cell" data-piece="♟">♟</div>
+        <div class="cell" data-piece="♟">♟</div>
+        <div class="cell" data-piece="♟">♟</div>
+        <div class="cell" data-piece="♟">♟</div>
+        <div class="cell" data-piece="♟">♟</div>
+
+        <!-- Row 3 to Row 6 (Empty cells) -->
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+        <div class="cell" data-piece=""></div>
+
+        <!-- Row 7 -->
+        <div class="cell" data-piece="♙">♙</div>
+        <div class="cell" data-piece="♙">♙</div>
+        <div class="cell" data-piece="♙">♙</div>
+        <div class="cell" data-piece="♙">♙</div>
+        <div class="cell" data-piece="♙">♙</div>
+        <div class="cell" data-piece="♙">♙</div>
+        <div class="cell" data-piece="♙">♙</div>
+        <div class="cell" data-piece="♙">♙</div>
+
+        <!-- Row 8 -->
+        <div class="cell" data-piece="♖">♖</div>
+        <div class="cell" data-piece="♘">♘</div>
+        <div class="cell" data-piece="♗">♗</div>
+        <div class="cell" data-piece="♕">♕</div>
+        <div class="cell" data-piece="♔">♔</div>
+        <div class="cell" data-piece="♗">♗</div>
+        <div class="cell" data-piece="♘">♘</div>
+        <div class="cell" data-piece="♖">♖</div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let selectedPiece = null;
+            const cells = document.querySelectorAll('.cell');
+
+            cells.forEach(cell => {
+                cell.addEventListener('click', function() {
+                    if (!selectedPiece && cell.getAttribute('data-piece') !== '') {
+                        // Select the piece if it exists in the cell
+                        selectedPiece = cell;
+                        selectedPiece.classList.add('selected');
+                    } else if (selectedPiece && cell !== selectedPiece) {
+                        // Move the selected piece to the new cell
+                        cell.innerHTML = selectedPiece.innerHTML;
+                        cell.setAttribute('data-piece', selectedPiece.getAttribute('data-piece'));
+                        selectedPiece.innerHTML = '';
+                        selectedPiece.setAttribute('data-piece', '');
+                        selectedPiece.classList.remove('selected');
+                        selectedPiece = null;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
